@@ -1,0 +1,135 @@
+#!/bin/bash
+# Utils to manage project symlinks
+# padd (add project symlink)
+# prm  (remove)
+# pcd  (change to project dir)
+. ansi.sh
+
+handydir_base=~/prj
+
+padd () {
+	local pdir
+	local cmtu=''  # User comment
+	local cmt=''
+	local ans
+	local done=0
+	if [[ "$#" -lt 1 ]]; then
+		pdirreal=$(readlink "$PWD")
+		if [[ "$pdirreal" = '' ]]; then pdirreal="$PWD"; fi # dir is same
+		pdir=${PWD,,}
+		pdirp=${pdir##*/}
+		echo
+		echo "Adding new project: $yele$pdirp$rste"
+		echo "          Dest dir: $yele$pdirreal$rsete"
+		local shortcut="$pdirp--"
+		while [[ $done = 0 ]]; do
+			local prompt='Modify shortcut: \[${bgree}\]'
+			read -e -i "$shortcut" -p "${prompt@P}" shortcut
+			echo -n "$rste"
+			if [[ $shortcut = '' ]]; then
+				echo "${brede}Empty string not allowed$rste" >&2
+				break
+			else
+				shortcut=${shortcut//[[:space:]\/\"]/_} # space, slash, "
+			fi
+			local fin="$shortcut"
+			echo
+			echo "We're going to add '$yele$fin$rste' as a project."
+				cat <<-EOT
+					Linking:
+						ln -s "$yele$pdirreal$rste" "$bmage$handydir_base/$fin$rste"
+				EOT
+			read -p "Okay (Y/n)? " ans
+			if [[ ! "$ans" =~ ^[Yy]?$ ]]; then
+				echo "No?  ${yele}Try again or Ctrl-C to quit$rste"
+			else
+				ln -s "$pdirreal" "$handydir_base/$fin"
+				done=1
+			fi
+		done
+	fi
+}
+
+prm () {
+	cd "$handydir_base" && {
+		if [[ "$#" -gt 1 ]]; then 
+			echo
+			echo "We're in $handydir_base."
+			echo "We're going to REMOVE $brede'$1'$rste"
+			read -p "Okay (y/N)? " ans
+			if [[ "$ans" =~ ^[Yy] ]]; then
+				echo "Removing: $1 (dry run still)"
+				echo "rm '$1'"
+			fi
+		fi
+	}
+}
+
+pcd () {
+	local re
+	# echo "CHDIR($handydir_base)"
+	# echo "Completion arg 1: $1"
+	# echo "Completion arg 2: $2"
+	local match="$1"
+	local items
+	cd "$handydir_base" && {
+		if [[ "$match" = '' ]]; then re=".*"; else re=".*$match.*"; fi
+		# echo "re        : $re"
+		# echo "find (vis): find . -type l -regex "$re" -printf '%TY-%Tm-%Td--%TH:%TM %p\n'"
+		mapfile -td '' items < <(find . -type l -regex "$re" \
+		                               -printf '%TY-%Tm-%Td--%TH:%TM %p\0' |
+		                                  sort -rnz | "${fzf_cmd[@]}" -q "$match")
+		# echo "FZF replies: ${items[@]}"
+		if [[ "${#items}" -gt 0 ]]; then
+			local ddir=${items[0]}
+			ddir=$(printf '%s' "$ddir" | sed -e 's/^[^ ]* //')
+			echo "Changing to project: $ddir"
+			cd -P "$ddir"
+			# items=("$ddir")
+			# local ddirreal=$(readlink "$ddir")
+			# if [[ "$ddirreal" != '' ]]; then
+			# 	COMPREPLY=("$ddirreal")
+			# else
+			# 	COMPREPLY=("$ddir")
+			# fi
+		fi
+	}
+}
+
+pcdt () {
+	cd "$handydir_base" && {
+		if [[ "$#" -gt 0 ]]; then 
+			cd -P "$1"
+		fi
+	}
+}
+
+# --preview-window=
+fzf_preview_height=13
+fzf_cmd=(fzf-proper -zz --delimiter=$' ' --preview='cd {2..} && ls -lGg | tail -n +2'
+         --preview-window=top:$fzf_preview_height)
+
+_pcdt_complete() {
+	local re
+	# echo "CHDIR($handydir_base)"
+	# echo "Completion arg 2: $2"
+	local match="$2"
+	cd "$handydir_base" && {
+		if [[ "$match" = '' ]]; then re=".*"; else re=".*$match.*"; fi
+		# echo "re        : $re"
+		# echo "find (vis): find . -type l -regex "$re" -printf '%TY-%Tm-%Td--%TH:%TM %p\n'"
+		# mapfile -td '' COMPREPLY < <(find . -type l -regex "$re" \
+		#                                -printf '%TY-%Tm-%Td--%TH:%TM %p\0' |
+		#                                   sort -rnz | "${fzf_cmd[@]}" -q "$match")
+		# find . -type l -regex "$re" \
+		#                                -printf '%TY-%Tm-%Td--%TH:%TM %p\0' |
+		#                                   sort -rnz | sed -ze 's#^[^ ]* \./##; s/$/\n/;'
+		# echo
+		# \/ printf stuff for sorting output from find
+		mapfile -td '' COMPREPLY < <(find . -type l -regex "$re" \
+		                               -printf '%TY-%Tm-%Td--%TH:%TM %p\0' |
+										  sort -rnz | sed -ze 's#^[^ ]* \./##;')
+	}
+}
+complete -F _pcdt_complete pcdt
+alias project_dir_pcd_padd='echo "Use pcd, padd, prm'
