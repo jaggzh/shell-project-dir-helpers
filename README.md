@@ -2,8 +2,9 @@
 
 The main script, sourced from your shell rc, provides some functions, like:
 
-* padd: Project add
-* pcd: Change to a project
+* *padd*: Project add
+* *pcd*: Change to a project (uses `fzf`. see screenshot)
+* *pcdt*: Bash tab-completion version of pcd
 
 After `padd` (adding) a project, you can then use `pcd` to change
 to it from anywhere (`pcd` lets you change to any project dir).
