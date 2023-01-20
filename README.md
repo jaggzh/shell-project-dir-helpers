@@ -11,6 +11,8 @@ to it from anywhere (`pcd` lets you change to any project dir).
 
 (Alternatively, you can just `cd -P ~/prj/projectname` (or whatever you set the projects main folder to) to change to its folder.  -P tells cd to resolve the symlinks to get to the physical dir).
 
+![padd screenshot](i/ss-anim-session.gif)
+
 ![padd screenshot](i/ss-padd.png)
 
 ![pcd running screenshot](i/ss-pcd--1--execution.png)
