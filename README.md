@@ -1,5 +1,7 @@
 # Shell Project Directory Helpers
 
+* See the section **What's the Point?**
+
 The main script, sourced from your shell rc, provides some functions, like:
 
 * *padd*: Project add
@@ -26,6 +28,12 @@ to it from anywhere (`pcd` lets you change to any project dir).
 | After pcd, when we're in the chosen project directory |
 | :---: |
 | ![pcd done screenshot](i/ss-pcd--2--done.png) |
+
+## **What's the Point?**
+
+You know when you have different projects, libraries, folders, in different
+places, and you are always changing to those folders?  This easily lets you add
+a folder, with keywords, so you can later just change to them with `pcd {keyword}` or `pcd` (then type a keyword to filter), and when you hit enter... you're cd'ed there.
 
 ## Requirements
 * fzf: If you want to use the `pcd` command. ([https://github.com/junegunn/fzf](https://github.com/junegunn/fzf))

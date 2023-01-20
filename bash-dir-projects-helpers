@@ -5,7 +5,7 @@
 # pcd  (change to project dir)
 . ansi.sh
 
-handydir_base=~/prj
+handydir_base=~/p
 
 padd () {
 	local pdir
