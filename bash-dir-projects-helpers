@@ -5,7 +5,7 @@
 # pcd  (change to project dir)
 . ansi.sh
 
-handydir_base=~/p
+handydir_base=~/prj
 
 padd () {
 	local pdir
@@ -106,7 +106,7 @@ pcdt () {
 
 # --preview-window=
 fzf_preview_height=13
-fzf_cmd=(fzf-proper -zz --delimiter=$' ' --preview='cd {2..} && ls -lGg | tail -n +2'
+fzf_cmd=(fzf-proper -zz --delimiter=$' ' --preview='cd -P {2..} && { pwd; ls -lGg | tail -n +2 | sed -e "s/^/ /"; }'
          --preview-window=top:$fzf_preview_height)
 
 _pcdt_complete() {
