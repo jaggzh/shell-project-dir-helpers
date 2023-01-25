@@ -5,7 +5,9 @@
 # pcd  (change to project dir)
 . ansi.sh
 
-handydir_base=~/prj
+if [[ -z "${handydir_base+is_set}" ]]; then
+	handydir_base=~/prj
+fi
 
 padd () {
 	local pdir
