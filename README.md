@@ -1,5 +1,7 @@
 # Shell Project Directory Helpers
 
+* See the section **What's the Point?**
+
 The main script, sourced from your shell rc, provides some functions, like:
 
 * *padd*: Project add
@@ -11,11 +13,27 @@ to it from anywhere (`pcd` lets you change to any project dir).
 
 (Alternatively, you can just `cd -P ~/prj/projectname` (or whatever you set the projects main folder to) to change to its folder.  -P tells cd to resolve the symlinks to get to the physical dir).
 
-![padd screenshot](i/ss-padd.png)
+| *Example session (adding projects, changing to them, etc.)*|
+| :---: |
+| ![padd screenshot](i/ss-anim-session.gif) |
 
-![pcd running screenshot](i/ss-pcd--1--execution.png)
+| Snapshot of `padd` (project add) interaction |
+| :---: |
+| ![padd screenshot](i/ss-padd.png) |
 
-![pcd done screenshot](i/ss-pcd--2--done.png)
+| Selection screen from pcd (using 'fzf') |
+| :---: |
+| ![pcd running screenshot](i/ss-pcd--1--execution.png) |
+
+| After pcd, when we're in the chosen project directory |
+| :---: |
+| ![pcd done screenshot](i/ss-pcd--2--done.png) |
+
+## **What's the Point?**
+
+You know when you have different projects, libraries, folders, in different
+places, and you are always changing to those folders?  This easily lets you add
+a folder, with keywords, so you can later just change to them with `pcd {keyword}` or `pcd` (then type a keyword to filter), and when you hit enter... you're cd'ed there.
 
 ## Requirements
 * fzf: If you want to use the `pcd` command. ([https://github.com/junegunn/fzf](https://github.com/junegunn/fzf))
