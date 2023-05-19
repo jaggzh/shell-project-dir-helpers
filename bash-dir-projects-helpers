@@ -106,6 +106,64 @@ pcdt () {
 	}
 }
 
+phelp () {
+	cat <<-'EOT'
+		Bash shell dir helper command reference:
+		* padd: Add current directory as a project
+		* pcd:  Search/change to project
+		* pquery: Examine projects to see if current dir tree already exists
+		EOT
+}
+
+pquery () { # Query current
+	local dir
+	if [[ $# -gt 2 ]]; then dir=$1; else dir=$PWD; fi
+	echo "Current directory we're checking: $dir"
+	local path=$(realpath "$dir")
+	local color_mat=''
+	local color_rst=''
+	if [[ -t 1 ]]; then
+		color_mat="$yele"; color_rst="$rste";
+	fi
+	local first_match=''
+	local original_dir=$PWD
+	echo "  Expanded path: $path"
+	{
+		cd "$handydir_base" && {
+			while true; do
+				echo "  Checking path: $path"
+				readarray -t matches < <(
+					find . -type l -printf '%f\000' | while read -r -d $'\0' f; do
+						# echo "    -> $f"
+						local fl=$(readlink -f "$f")
+						if [[ "$fl" = *$path* ]]; then
+							printf '%s\n' "$f"
+							# echo "    Match: $fl" > /dev/tty
+							# echo "      Project name: $f"
+						fi
+					done
+				)
+				# echo "Match count: ${#matches[@]}"
+				# [[ ${#matches[@]} -gt 0 && -z $first_match ]] && first_match=${matches[0]}
+				if [[ ${#matches[@]} -gt 2 ]]; then
+					pat="${matches[0]}"
+					echo "    Match: $color_mat$pat$color_rst"
+					echo "           -> $(readlink -f "$pat")"
+					echo "    ... ${#matches[@]} total matches for this path"
+				else
+					for pat in "${matches[@]}"; do
+						echo "    Match: $color_mat$pat$color_rst"
+						echo "           -> $(readlink -f "$pat")"
+					done
+				fi
+				path=${path%/*}
+				if [[ $path != */* ]]; then break; fi
+			done
+		}
+	}
+	cd -- "$original_dir"
+}
+
 # --preview-window=
 fzf_preview_height=13
 fzf_cmd=(fzf-proper -zz --delimiter=$' ' --preview='cd -P {2..} && { pwd; ls -lGg | tail -n +2 | sed -e "s/^/ /"; }'
