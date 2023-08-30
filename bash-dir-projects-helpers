@@ -74,7 +74,8 @@ pcd () {
 	# echo "Completion arg 2: $2"
 	local match="$1"
 	local items
-	cd "$handydir_base" && {
+	local finaldir
+	pushd "$handydir_base" && {
 		if [[ "$match" = '' ]]; then re=".*"; else re=".*$match.*"; fi
 		# echo "re        : $re"
 		# echo "find (vis): find . -type l -regex "$re" -printf '%TY-%Tm-%Td--%TH:%TM %p\n'"
@@ -86,6 +87,7 @@ pcd () {
 			local ddir=${items[0]}
 			ddir=$(printf '%s' "$ddir" | sed -e 's/^[^ ]* //')
 			echo "Changing to project: $ddir"
+			finaldir="$ddir"
 			cd -P "$ddir"
 			# items=("$ddir")
 			# local ddirreal=$(readlink "$ddir")
@@ -96,6 +98,8 @@ pcd () {
 			# fi
 		fi
 	}
+	popd
+	[[ -n $finaldir ]] && cd -P "$handydir_base/$finaldir"
 }
 
 pcdt () {
