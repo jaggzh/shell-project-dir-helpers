@@ -122,6 +122,7 @@ phelp () {
 pquery () { # Query current
 	local dir
 	if [[ $# -gt 2 ]]; then dir=$1; else dir=$PWD; fi
+	echo "Link base: $handydir_base"
 	echo "Current directory we're checking: $dir"
 	local path=$(realpath "$dir")
 	local color_mat=''
