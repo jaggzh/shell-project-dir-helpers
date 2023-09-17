@@ -134,7 +134,7 @@ pquery () { # Query current
 	local original_dir=$PWD
 	echo "  Expanded path: $path"
 	{
-		cd "$handydir_base" && {
+		( cd "$handydir_base" && {
 			while true; do
 				echo "  Checking path: $path"
 				readarray -t matches < <(
@@ -164,9 +164,8 @@ pquery () { # Query current
 				path=${path%/*}
 				if [[ $path != */* ]]; then break; fi
 			done
-		}
+		} )
 	}
-	cd -- "$original_dir"
 }
 
 # --preview-window=
