@@ -53,6 +53,8 @@ padd () {
 }
 
 prm () {
+	pushd
+	local cwd=$PWD
 	cd "$handydir_base" && {
 		if [[ "$#" -gt 1 ]]; then 
 			echo
@@ -65,6 +67,7 @@ prm () {
 			fi
 		fi
 	}
+	popd
 }
 
 pcd () {
@@ -169,9 +172,19 @@ pquery () { # Query current
 }
 
 # --preview-window=
-fzf_preview_height=13
-fzf_cmd=(fzf-proper -zz --delimiter=$' ' --preview='cd -P {2..} && { pwd; ls -lGg | tail -n +2 | sed -e "s/^/ /"; }'
-         --preview-window=top:$fzf_preview_height)
+fzf_preview_height=20
+fzf_height='100%'
+fzf_base_cmd=(fzf +s +m --exact --tiebreak=end --no-sort --no-multi
+	  --color='bg+:#002000,info:#BDBB72,border:#6B6B6B,spinner:#98BC99'
+	  --color='hl:#f19892,fg:#D9D9D9,header:#719872,fg+:#D9D9D9'
+	  --color='pointer:#E12672,marker:#E17899,prompt:#98BEDE,hl+:#f8BC99'
+	  --read0 --print0 --border
+)
+fzf_cmd=("${fzf_base_cmd[@]}"
+	--delimiter=$' '
+	--preview='cd -P {2..} && { pwd; ls -lGg | tail -n +2 | sed -e "s/^/ /"; }'
+	--height="$fzf_height"
+	--preview-window=top:$fzf_preview_height)
 
 _pcdt_complete() {
 	local re
