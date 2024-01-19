@@ -172,7 +172,7 @@ pquery () { # Query current
 }
 
 # --preview-window=
-fzf_preview_height=20
+export fzf_preview_height=20 # Export for expansion in the --preview cmd
 fzf_height='100%'
 fzf_base_cmd=(fzf +s +m --exact --tiebreak=end --no-sort --no-multi
 	  --color='bg+:#002000,info:#BDBB72,border:#6B6B6B,spinner:#98BC99'
@@ -182,7 +182,7 @@ fzf_base_cmd=(fzf +s +m --exact --tiebreak=end --no-sort --no-multi
 )
 fzf_cmd=("${fzf_base_cmd[@]}"
 	--delimiter=$' '
-	--preview='cd -P {2..} && { echo -e "\\033[1;36;1m"$(pwd)"\\033[m"; ls -lGgt | tail -n +2 | head -50 | sed -e "s/^/ /"; }'
+	--preview='cd -P {2..} && { echo -e "\\033[1;36;1m"$(pwd)"\\033[m"; ls -lGgt | tail -n +2 | head -$fzf_preview_height | sed -e "s/^/ /"; }'
 	--height="$fzf_height"
 	--preview-window=top:$fzf_preview_height)
 
