@@ -182,7 +182,7 @@ fzf_base_cmd=(fzf +s +m --exact --tiebreak=end --no-sort --no-multi
 )
 fzf_cmd=("${fzf_base_cmd[@]}"
 	--delimiter=$' '
-	--preview='cd -P {2..} && { pwd; ls -lGg | tail -n +2 | sed -e "s/^/ /"; }'
+	--preview='cd -P {2..} && { echo -e "\\033[1;36;1m"$(pwd)"\\033[m"; ls -lGgt | tail -n +2 | head -50 | sed -e "s/^/ /"; }'
 	--height="$fzf_height"
 	--preview-window=top:$fzf_preview_height)
 
