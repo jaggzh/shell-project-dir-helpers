@@ -3,7 +3,7 @@
 # padd (add project symlink)
 # prm  (remove)
 # pcd  (change to project dir)
-. ansi.sh
+# . ansi.sh
 
 if [[ -z "${handydir_base+is_set}" ]]; then
 	handydir_base=~/prj
@@ -21,29 +21,29 @@ padd () {
 		pdir=${PWD,,}
 		pdirp=${pdir##*/}
 		echo
-		echo "Adding new project: $yele$pdirp$rste"
-		echo "          Dest dir: $yele$pdirreal$rsete"
+		echo "Adding new project: $yel$pdirp$rst"
+		echo "          Dest dir: $yel$pdirreal$rst"
 		local shortcut="$pdirp--"
 		while [[ $done = 0 ]]; do
-			local prompt='Modify shortcut: \[${bgree}\]'
+			local prompt='Modify shortcut: \[${bgre}\]'
 			read -e -i "$shortcut" -p "${prompt@P}" shortcut
-			echo -n "$rste"
+			echo -n "$rst"
 			if [[ $shortcut = '' ]]; then
-				echo "${brede}Empty string not allowed$rste" >&2
+				echo "${bred}Empty string not allowed$rst" >&2
 				break
 			else
 				shortcut=${shortcut//[[:space:]\/\"]/_} # space, slash, "
 			fi
 			local fin="$shortcut"
 			echo
-			echo "We're going to add '$yele$fin$rste' as a project."
+			echo "We're going to add '$yel$fin$rst' as a project."
 				cat <<-EOT
 					Linking:
-						ln -s "$yele$pdirreal$rste" "$bmage$handydir_base/$fin$rste"
+						ln -s "$yel$pdirreal$rst" "$bmag$handydir_base/$fin$rst"
 				EOT
 			read -p "Okay (Y/n)? " ans
 			if [[ ! "$ans" =~ ^[Yy]?$ ]]; then
-				echo "No?  ${yele}Try again or Ctrl-C to quit$rste"
+				echo "No?  ${yel}Try again or Ctrl-C to quit$rst"
 			else
 				ln -s "$pdirreal" "$handydir_base/$fin"
 				done=1
@@ -59,7 +59,7 @@ prm () {
 		if [[ "$#" -gt 1 ]]; then 
 			echo
 			echo "We're in $handydir_base."
-			echo "We're going to REMOVE $brede'$1'$rste"
+			echo "We're going to REMOVE $bred'$1'$rst"
 			read -p "Okay (y/N)? " ans
 			if [[ "$ans" =~ ^[Yy] ]]; then
 				echo "Removing: $1 (dry run still)"
@@ -138,7 +138,7 @@ pquery () { # Query current
 	local color_mat=''
 	local color_rst=''
 	if [[ -t 1 ]]; then
-		color_mat="$yele"; color_rst="$rste";
+		color_mat="$yel"; color_rst="$rst";
 	fi
 	local first_match=''
 	local original_dir=$PWD
